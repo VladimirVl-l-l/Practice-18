@@ -20,7 +20,10 @@ const Users = () => {
    const getPhraseClasses = (number) => {
       return number === 0 ? 'badge m-1 bg-danger' : 'badge m-1 bg-primary';
    };
-   const getBadgeClasses = (color) => {
+   const getQualityClasses = (quality) => {
+      return `badge bg-${quality.color} m-1`;
+   };
+   /*    const getQualityClasses = (color) => {
       if (color === 'primary') {
          return 'badge m-1 bg-primary';
       }
@@ -39,7 +42,7 @@ const Users = () => {
       if (color === 'dark') {
          return 'badge m-1 bg-dark';
       }
-   };
+   }; */
    const renderTable = () => {
       if (users.length !== 0) {
          return (
@@ -62,7 +65,8 @@ const Users = () => {
                            {user.qualities.map((item) => (
                               <span
                                  key={item._id}
-                                 className={getBadgeClasses(item.color)}
+                                 className={getQualityClasses(item)}
+                                 // className={getQualityClasses(item.color)}
                               >
                                  {item.name}
                               </span>
@@ -90,6 +94,7 @@ const Users = () => {
 
    return (
       <>
+         <h1>Fast love App</h1>
          <h2>
             <span className={getPhraseClasses(users.length)}>
                {renderPhrase(users.length)}
