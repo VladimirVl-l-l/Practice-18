@@ -23,26 +23,7 @@ const Users = () => {
    const getQualityClasses = (quality) => {
       return `badge bg-${quality.color} m-1`;
    };
-   /*    const getQualityClasses = (color) => {
-      if (color === 'primary') {
-         return 'badge m-1 bg-primary';
-      }
-      if (color === 'secondary') {
-         return 'badge m-1 bg-secondary';
-      }
-      if (color === 'success') {
-         return 'badge m-1 bg-success';
-      }
-      if (color === 'danger') {
-         return 'badge m-1 bg-danger';
-      }
-      if (color === 'info') {
-         return 'badge m-1 bg-info';
-      }
-      if (color === 'dark') {
-         return 'badge m-1 bg-dark';
-      }
-   }; */
+
    const renderTable = () => {
       if (users.length !== 0) {
          return (
@@ -66,7 +47,6 @@ const Users = () => {
                               <span
                                  key={item._id}
                                  className={getQualityClasses(item)}
-                                 // className={getQualityClasses(item.color)}
                               >
                                  {item.name}
                               </span>
