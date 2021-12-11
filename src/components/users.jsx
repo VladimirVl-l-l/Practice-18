@@ -1,32 +1,10 @@
-import React, { useState } from 'react';
-import api from '../api';
+import React from 'react';
+import User from './user';
 
-const Users = () => {
-   const [users, setUser] = useState(api.users.fetchAll());
-   const handleDelete = (userId) => {
-      setUser((newState) => newState.filter((user) => user._id !== userId));
-   };
-   const renderPhrase = (number) => {
-      if (number === 0) {
-         return 'Никто с тобой не тусанет';
-      }
-      if (number < 2 || number >= 5) {
-         return `${number} человек тусанет с тобой сегодня`;
-      }
-      if (number >= 2 && number <= 4) {
-         return `${number} человека тусанут с тобой сегодня`;
-      }
-   };
-   const getPhraseClasses = (number) => {
-      return number === 0 ? 'badge m-1 bg-danger' : 'badge m-1 bg-primary';
-   };
-   const getQualityClasses = (quality) => {
-      return `badge bg-${quality.color} m-1`;
-   };
-
-   const renderTable = () => {
-      if (users.length !== 0) {
-         return (
+const Users = ({ users, onDelete, onToggleBookMark }) => {
+   return (
+      <>
+         {users.length > 0 && (
             <table className="table">
                <thead>
                   <tr>
@@ -35,52 +13,19 @@ const Users = () => {
                      <th scope="col">Профессия</th>
                      <th scope="col">Встретился, раз</th>
                      <th scope="col">Оценка</th>
+                     <th scope="col">Избранное</th>
                      <th scope="col">Удалить</th>
                   </tr>
                </thead>
                <tbody>
-                  {users.map((user) => (
-                     <tr key={user._id}>
-                        <td>{user.name}</td>
-                        <td>
-                           {user.qualities.map((item) => (
-                              <span
-                                 key={item._id}
-                                 className={getQualityClasses(item)}
-                              >
-                                 {item.name}
-                              </span>
-                           ))}
-                        </td>
-                        <td>{user.profession.name}</td>
-                        <td>{user.completedMeetings}</td>
-                        <td>{user.rate} /5</td>
-                        <td>
-                           <button
-                              key={user._id}
-                              className="btn btn-danger"
-                              onClick={() => handleDelete(user._id)}
-                           >
-                              delete
-                           </button>
-                        </td>
-                     </tr>
-                  ))}
+                  <User
+                     user={users}
+                     deleteUser={onDelete}
+                     userToggleBookMark={onToggleBookMark}
+                  />
                </tbody>
             </table>
-         );
-      }
-   };
-
-   return (
-      <>
-         <h1>Fast love App</h1>
-         <h2>
-            <span className={getPhraseClasses(users.length)}>
-               {renderPhrase(users.length)}
-            </span>
-         </h2>
-         {renderTable()}
+         )}
       </>
    );
 };
