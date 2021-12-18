@@ -9,11 +9,13 @@ const SearchStatus = ({ length }) => {
       if (lastOne === 1) return "Человек тусанет";
    };
    return (
-      <span className={"badge bg-" + (length > 0 ? "primary" : "danger")}>
-         {length > 0
-            ? `${length} ${renderPhrase(length)} с тобой сегодня`
-            : "Никто с тобой не тусанет"}
-      </span>
+      <h2>
+         <span className={"badge bg-" + (length > 0 ? "primary" : "danger")}>
+            {length > 0
+               ? `${length} ${renderPhrase(length)} с тобой сегодня`
+               : "Никто с тобой не тусанет"}
+         </span>
+      </h2>
    );
 };
 
