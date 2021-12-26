@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-// import User from "./user";
 import TableHeader from "./tableHeader";
 import TableBody from "./tableBody";
 import BookMark from "./bookmark";
