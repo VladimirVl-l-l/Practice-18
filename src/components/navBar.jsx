@@ -1,18 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const NavBar = () => {
+   const [activeNavButton, setNavButton] = useState();
+   const getClass = (item) => {
+      return (
+         "btn btn-outline-info m-2" +
+         (activeNavButton === item ? " active" : "")
+      );
+   };
+   const activeLink = (item) => {
+      setNavButton(item);
+   };
    return (
       <>
-         <span className={"btn btn-outline-info m-2"}>
+         <button
+            className={getClass("Main")}
+            onClick={() => activeLink("Main")}
+         >
             <Link to="/">Main</Link>
-         </span>
-         <span className={"btn btn-outline-info m-2"}>
+         </button>
+         <button
+            className={getClass("Login")}
+            onClick={() => activeLink("Login")}
+         >
             <Link to="/login">Login</Link>
-         </span>
-         <span className={"btn btn-outline-info m-2"}>
+         </button>
+         <button
+            className={getClass("Users")}
+            onClick={() => activeLink("Users")}
+         >
             <Link to="/users">Users</Link>
-         </span>
+         </button>
       </>
    );
 };

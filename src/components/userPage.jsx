@@ -1,17 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import QualitiesList from "./qualitiesList";
 import { useHistory } from "react-router-dom";
+import api from "../api";
 
-const UserPage = ({ users, id }) => {
-   const getUserById = (id) => {
-      return users.find((user) => user._id === id);
-   };
+const UserPage = ({ userId }) => {
    const history = useHistory();
+   const [user, setUser] = useState();
+   useEffect(() => {
+      api.users.getById(userId).then((data) => setUser(data));
+   });
    const handleBack = () => {
       history.replace("/users");
    };
-   const user = getUserById(id);
 
    return (
       <>
@@ -38,8 +39,7 @@ const UserPage = ({ users, id }) => {
 };
 
 UserPage.propTypes = {
-   id: PropTypes.string,
-   users: PropTypes.array
+   userId: PropTypes.string
 };
 
 export default UserPage;
