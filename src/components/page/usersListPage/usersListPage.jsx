@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import Pagination from "./pagination";
-import { paginate } from "../utils/paginate";
-import api from "../api";
-import GroupList from "./groupList";
-import SearchStatus from "./searchStatus";
-import UserTable from "./usersTable";
+import Pagination from "../../common/pagination";
+import { paginate } from "../../../utils/paginate";
+import api from "../../../api";
+import GroupList from "../../common/groupList";
+import SearchStatus from "../../ui/searchStatus";
+import UserTable from "../../ui/usersTable";
 import _ from "lodash";
-import SearchBar from "./searchBar";
 
 const UsersList = () => {
    const [currentPage, setCurrentPage] = useState(1);
    const [professions, setProfessions] = useState();
    const [selectedProf, setSelectedProf] = useState();
-   const [searchUser, setSearchUser] = useState();
+   const [searchUser, setSearchUser] = useState("");
    const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
    const pageSize = 6;
 
@@ -44,13 +43,10 @@ const UsersList = () => {
 
    useEffect(() => {
       setCurrentPage(1);
-   }, [selectedProf]);
-
-   useEffect(() => {
-      setCurrentPage(1);
-   }, [searchUser]);
+   }, [selectedProf, searchUser]);
 
    const handleProfesionSelect = (item) => {
+      if (searchUser !== "") setSearchUser("");
       setSelectedProf(item);
    };
 
@@ -61,42 +57,43 @@ const UsersList = () => {
    const handleSort = (item) => {
       setSortBy(item);
    };
-   const handleSearchUser = (items) => {
-      setSearchUser(items);
+   const handleSearchUser = ({ target }) => {
+      setSelectedProf(undefined);
+      setSearchUser(target.value);
    };
 
    if (users) {
-      const filteredUsers = selectedProf
-         ? users.filter((user) => _.isEqual(user.profession, selectedProf))
-         : users;
-
+      let filteredUsers;
+      if (searchUser) {
+         filteredUsers = users.filter(
+            (user) =>
+               user.name.toLowerCase().indexOf(searchUser.toLowerCase()) !== -1
+         );
+      } else if (selectedProf) {
+         filteredUsers = users.filter((user) =>
+            _.isEqual(user.profession, selectedProf)
+         );
+      } else {
+         filteredUsers = users;
+      }
       const sortedUsers = _.orderBy(
          filteredUsers,
          [sortBy.path],
          [sortBy.order]
       );
 
-      const searchUsers = searchUser?.data || users;
-      const renderUsers = selectedProf ? sortedUsers : searchUsers;
+      const count = filteredUsers.length;
 
-      const count = selectedProf ? filteredUsers.length : searchUsers.length;
-
-      const userCrop = paginate(renderUsers, currentPage, pageSize);
+      const userCrop = paginate(sortedUsers, currentPage, pageSize);
 
       const clearFilter = () => {
          setSelectedProf();
-      };
-      const clearSearch = () => {
-         setSearchUser();
       };
 
       return (
          <div className="d-flex">
             {professions && (
-               <div
-                  className="d-flex flex-column flex-shrink-0 p-3"
-                  onClick={clearSearch}
-               >
+               <div className="d-flex flex-column flex-shrink-0 p-3">
                   <GroupList
                      selectedItem={selectedProf}
                      items={professions}
@@ -112,11 +109,15 @@ const UsersList = () => {
             )}
             <div className="d-flex flex-column">
                <SearchStatus length={count} />
-               <SearchBar
-                  data={users}
-                  update={handleSearchUser}
-                  clearFil={clearFilter}
-               />
+               <div className="searchbar form-group">
+                  <input
+                     value={searchUser}
+                     type="text"
+                     className="form-control"
+                     placeholder="Поиск людей по имени..."
+                     onChange={handleSearchUser}
+                  />
+               </div>
                {count > 0 && (
                   <UserTable
                      users={userCrop}

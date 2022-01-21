@@ -1,36 +1,48 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import QualitiesList from "./qualitiesList";
+import Qualities from "../../ui/qualities";
 import { useHistory } from "react-router-dom";
-import api from "../api";
+import api from "../../../api";
 
 const UserPage = ({ userId }) => {
    const history = useHistory();
    const [user, setUser] = useState();
    useEffect(() => {
       api.users.getById(userId).then((data) => setUser(data));
-   });
+   }, []);
    const handleBack = () => {
       history.replace("/users");
+   };
+   const handleEditUser = () => {
+      history.replace(`/users/${userId}/edit`);
    };
 
    return (
       <>
          {user && (
             <div>
+               <div className="mt-2">
+                  <button
+                     onClick={() => {
+                        handleBack();
+                     }}
+                  >
+                     Все пользователи
+                  </button>
+               </div>
                <h1>Имя: {user.name}</h1>
                <h2>Профессия: {user.profession.name}</h2>
                <h6>
-                  Качества: <QualitiesList qualities={user.qualities} />
+                  Качества: <Qualities qualities={user.qualities} />
                </h6>
                <h6>Встретился, раз: {user.completedMeetings}</h6>
                <h1>Оценка: {user.rate}</h1>
                <button
                   onClick={() => {
-                     handleBack();
+                     handleEditUser();
                   }}
                >
-                  Все пользователи
+                  Редактировать
                </button>
             </div>
          )}
