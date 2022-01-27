@@ -1,22 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const withCheckLogin = (Component) => (props) => {
     const isAuth = localStorage.getItem("user");
+    const [onLogin, setOnLogin] = useState();
 
-    const onLogin = () => {
-        localStorage.setItem("user", "userName2");
-        console.log(localStorage.user);
+    const handleOnLogin = ({ target }) => {
+        if (target.value === "In") {
+            localStorage.setItem("user", "Name");
+        } else {
+            localStorage.setItem("user", "");
+        }
+        setOnLogin("user");
     };
-    const onLogOut = () => {
-        localStorage.setItem("user", "");
-        console.log(localStorage.user);
-    };
+    useEffect(() => {
+        setOnLogin();
+    }, [onLogin]);
+
     return (
         <>
             {isAuth ? (
-                <Component {...props} isAuth onLogOut={onLogOut} />
+                <Component {...props} isAuth onLogOut={handleOnLogin} />
             ) : (
-                <Component {...props} onLogin={onLogin} />
+                <Component {...props} onLogin={handleOnLogin} />
             )}
         </>
     );
