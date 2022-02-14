@@ -3,33 +3,24 @@ import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
 import { useHistory } from "react-router-dom";
-import { useLogin } from "../../hooks/useLogin";
+import { useAuth } from "../../hooks/useAuth";
 
 const LoginForm = () => {
    const history = useHistory();
    const [data, setData] = useState({ email: "", password: "", stayOn: false });
    const [errors, setErrors] = useState({});
-   const { signIn } = useLogin();
+   const [enterError, setEnterError] = useState(null);
+   const { signIn } = useAuth();
    const handleChange = (target) => {
       setData((prevState) => ({ ...prevState, [target.name]: target.value }));
+      setEnterError(null);
    };
    const validatorConfig = {
       email: {
-         isRequired: { message: "Почта обязательна для заполнения" },
-         isEmail: { message: "Почта введена некорректно" }
+         isRequired: { message: "Почта обязательна для заполнения" }
       },
       password: {
-         isRequired: { message: "Пароль обязателен для заполнения" },
-         isCapitalSymbol: {
-            message: "Пароль должен содержать хотя бы одну заглавную букву"
-         },
-         isContainDigit: {
-            message: "Пароль должен содержать хотя бы одну цифру"
-         },
-         minSymbol: {
-            message: "Пароль должен содержать минимум 8 символов",
-            value: 8
-         }
+         isRequired: { message: "Пароль обязателен для заполнения" }
       }
    };
 
@@ -51,7 +42,7 @@ const LoginForm = () => {
          await signIn(data);
          history.push("/");
       } catch (error) {
-         setErrors(error);
+         setEnterError(error.message);
       }
    };
    return (
@@ -80,9 +71,10 @@ const LoginForm = () => {
          >
             Оставаться в системе
          </CheckBoxField>
+         {enterError && <p className="text-danger">{enterError}</p>}
          <button
             type="submit"
-            disabled={!isValid}
+            disabled={!isValid || enterError}
             className="btn btn-primary w-100 mx-auto"
          >
             Submit
