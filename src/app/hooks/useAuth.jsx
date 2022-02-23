@@ -91,25 +91,25 @@ const AuthProvider = ({ children }) => {
          }
       }
    }
-   async function updateProfile({ _id, name, ...rest }) {
-      try {
-         console.log("_id", _id);
-         const { data } = await httpAuth.post("accounts:update", {
-            idToken: _id,
-            displayName: name,
-            returnSecureToken: true
-         });
-         console.log("data", data);
-         setTokens(data);
-         await updateUser({
-            _id,
-            name,
-            ...rest
-         });
-      } catch (error) {
-         errorCatcher(error);
-      }
-   }
+   // async function updateProfile({ _id, name, ...rest }) {
+   //    try {
+   //       console.log("_id", _id);
+   //       const { data } = await httpAuth.post("accounts:update", {
+   //          idToken: _id,
+   //          displayName: name,
+   //          returnSecureToken: true
+   //       });
+   //       console.log("data", data);
+   //       setTokens(data);
+   //       await updateUser({
+   //          _id,
+   //          name,
+   //          ...rest
+   //       });
+   //    } catch (error) {
+   //       errorCatcher(error);
+   //    }
+   // }
    async function createUser(data) {
       try {
          const { content } = await userService.create(data);
@@ -118,7 +118,7 @@ const AuthProvider = ({ children }) => {
          errorCatcher(error);
       }
    }
-   async function updateUser(data) {
+   async function updateProfile(data) {
       try {
          const { content } = await userService.update(data);
          setUser(content);

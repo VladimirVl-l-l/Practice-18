@@ -48,10 +48,8 @@ const EditUserPage = () => {
 
    useEffect(() => {
       setData({
-         _id: currentUser._id,
          name: currentUser.name,
          email: currentUser.email,
-         image: currentUser.image,
          profession: currentUser.profession,
          qualities: transformData(currentUser.qualities),
          sex: currentUser.sex
@@ -69,7 +67,7 @@ const EditUserPage = () => {
       for (const elem of elements) {
          for (const quality in qualities) {
             if (elem.value === qualities[quality]._id) {
-               qualitiesArray.push(qualities[quality]);
+               qualitiesArray.push(qualities[quality]._id);
             }
          }
       }
@@ -82,6 +80,11 @@ const EditUserPage = () => {
       if (!isValid) return;
       const newData = {
          ...data,
+         _id: currentUser._id,
+         completedMeetings: currentUser.completedMeetings,
+         image: currentUser.image,
+         rate: currentUser.rate,
+         licence: currentUser.licence,
          profession: getProfessionById(data.profession),
          qualities: getQualities(data.qualities)
       };
