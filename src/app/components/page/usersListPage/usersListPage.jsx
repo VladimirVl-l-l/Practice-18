@@ -8,12 +8,17 @@ import UserTable from "../../ui/usersTable";
 import _ from "lodash";
 import { useUser } from "../../../hooks/useUsers";
 import { useAuth } from "../../../hooks/useAuth";
-import { useProfessions } from "../../../hooks/useProfession";
+import { useSelector } from "react-redux";
+import {
+   getProfessions,
+   getProfessionsLoadingStatus
+} from "../../../store/professions";
 
 const UsersList = () => {
    const { users } = useUser();
    const { currentUser } = useAuth();
-   const { isLoading: professionsLoading, professions } = useProfessions();
+   const professions = useSelector(getProfessions());
+   const professionLoading = useSelector(getProfessionsLoadingStatus());
    const [currentPage, setCurrentPage] = useState(1);
    const [selectedProf, setSelectedProf] = useState();
    const [searchUser, setSearchUser] = useState("");
@@ -85,7 +90,7 @@ const UsersList = () => {
 
       return (
          <div className="d-flex">
-            {professions && !professionsLoading && (
+            {professions && !professionLoading && (
                <div className="d-flex flex-column flex-shrink-0 p-3">
                   <GroupList
                      selectedItem={selectedProf}
