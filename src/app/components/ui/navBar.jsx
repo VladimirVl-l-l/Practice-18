@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { getIsLoggedIn } from "../../store/users";
 import NavProfile from "./navProfile";
 
 const NavBar = () => {
-   const { currentUser } = useAuth();
+   const isLoggedIn = useSelector(getIsLoggedIn());
    const [activeNavButton, setNavButton] = useState();
    const getClass = (item) => {
       return (
@@ -27,7 +28,7 @@ const NavBar = () => {
                      Main
                   </Link>
                </button>
-               {currentUser && (
+               {isLoggedIn && (
                   <button
                      className={getClass("Users")}
                      onClick={() => activeLink("Users")}
@@ -39,7 +40,7 @@ const NavBar = () => {
                )}
             </div>
             <div className="d-flex">
-               {currentUser ? (
+               {isLoggedIn ? (
                   <NavProfile />
                ) : (
                   <button
