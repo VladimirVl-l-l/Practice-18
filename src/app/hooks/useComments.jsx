@@ -30,7 +30,6 @@ export const CommentsProvider = ({ children }) => {
          created_at: Date.now(),
          userId: currentUserId
       };
-
       try {
          const { content } = await commentService.createComment(comment);
          setComments((prevState) => [...prevState, content]);
