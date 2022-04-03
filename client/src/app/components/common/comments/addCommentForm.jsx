@@ -25,7 +25,6 @@ const AddCommentForm = ({ onSubmit }) => {
       setErrors(errors);
       return Object.keys(errors).length === 0;
    };
-
    const clearForm = () => {
       setData({});
       setErrors({});
@@ -50,7 +49,9 @@ const AddCommentForm = ({ onSubmit }) => {
                error={errors.content}
             />
             <div className="d-flex justify-content-end">
-               <button className="btn btn-primary">Опубликовать</button>
+               <button disabled={!data.content} className="btn btn-primary">
+                  Опубликовать
+               </button>
             </div>
          </form>
       </div>

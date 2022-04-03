@@ -1,0 +1,4 @@
+{
+	"port": 8080,
+	"mongoUri": "mongodb+srv://TestDeveloper:Coronatus1234@cluster0.yksjs.mongodb.net/fastCompanyDatabase?retryWrites=true&w=majority"
+}
