@@ -21,7 +21,7 @@ const UsersList = () => {
    const [currentPage, setCurrentPage] = useState(1);
    const [selectedProf, setSelectedProf] = useState();
    const [searchUser, setSearchUser] = useState("");
-   const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
+   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
    const pageSize = 6;
 
    const handleDelete = (userId) => {
@@ -48,17 +48,16 @@ const UsersList = () => {
       if (searchUser !== "") setSearchUser("");
       setSelectedProf(item);
    };
-
+   const handleSearchUser = ({ target }) => {
+      setSelectedProf(undefined);
+      setSearchUser(target.value);
+   };
    const handlePageChange = (pageIndex) => {
       setCurrentPage(pageIndex);
    };
 
    const handleSort = (item) => {
       setSortBy(item);
-   };
-   const handleSearchUser = ({ target }) => {
-      setSelectedProf(undefined);
-      setSearchUser(target.value);
    };
 
    if (users) {
@@ -71,7 +70,7 @@ const UsersList = () => {
                        .indexOf(searchUser.toLowerCase()) !== -1
               )
             : selectedProf
-            ? data.filter((user) => _.isEqual(user.profession, selectedProf))
+            ? data.filter((user) => user.profession === selectedProf._id)
             : data;
          return filteredUsers.filter((u) => u._id !== currentUserId);
       }

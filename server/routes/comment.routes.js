@@ -20,16 +20,18 @@ router
       try {
          const newComment = await Comment.create({
             ...req.body,
-            userId: req._id,
+            userId: req.user._id,
          });
          res.status(201).send(newComment);
       } catch (error) {
+         console.log(error.message);
+
          res.status(500).json({
             message: `На сервере произошла ошибка. Попробуйте немного позже`,
          });
       }
    });
-router.delete(":commentId", auth, async (req, res) => {
+router.delete("/:commentId", auth, async (req, res) => {
    try {
       const { commentId } = req.params;
       const removeComment = await Comment.findById(commentId);

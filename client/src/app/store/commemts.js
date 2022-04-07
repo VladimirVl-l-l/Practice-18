@@ -19,17 +19,29 @@ const commentsSlice = createSlice({
       commentsRequestFailed: (state, action) => {
          state.error = action.payload;
          state.isLoading = false;
+      },
+      commentCreated: (state, action) => {
+         state.entities.push(action.payload);
+      },
+      commentRemoved: (state, action) => {
+         state.entities = state.entities.filter(
+            (c) => c._id !== action.payload
+         );
       }
    }
 });
 
 const { reducer: commentsReducer, actions } = commentsSlice;
-const { commentsRequested, commentsReceived, commentsRequestFailed } = actions;
+const {
+   commentsRequested,
+   commentsReceived,
+   commentsRequestFailed,
+   commentCreated,
+   commentRemoved
+} = actions;
 
-const createCommentFailed = createAction("comments/createCommentFailed");
 const createCommentRequested = createAction("comments/createCommentRequested");
 const removeCommentRequested = createAction("comments/removeCommentRequested");
-const removeCommentFailed = createAction("comments/removeCommentFailed");
 
 export const loadCommentsList = (userId) => async (dispatch) => {
    dispatch(commentsRequested());
@@ -45,23 +57,21 @@ export const createComment = (payload) => async (dispatch, getState) => {
    dispatch(createCommentRequested());
    try {
       const { content } = await commentService.createComment(payload);
-      const stateComments = getState().comments.entities;
-      const newContent = [...stateComments, content];
-      dispatch(commentsReceived(newContent));
+      dispatch(commentCreated(content));
    } catch (error) {
-      dispatch(createCommentFailed(error.message));
+      dispatch(commentsRequestFailed(error.message));
    }
 };
 
-export const removeComment = (commentId) => async (dispatch, getState) => {
+export const removeComment = (commentId) => async (dispatch) => {
    dispatch(removeCommentRequested());
    try {
-      await commentService.removeComment(commentId);
-      const stateComments = getState().comments.entities;
-      const content = stateComments.filter((c) => c._id !== commentId);
-      dispatch(commentsReceived(content));
+      const { content } = await commentService.removeComment(commentId);
+      if (!content) {
+         dispatch(commentRemoved(commentId));
+      }
    } catch (error) {
-      dispatch(removeCommentFailed(error.message));
+      dispatch(commentsRequestFailed(error.message));
    }
 };
 
